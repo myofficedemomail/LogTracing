@@ -160,7 +160,7 @@
 							<div class="input-group">
 								<select path="planName" class="form-select" name="servername" id="servername">
 									<option value="" selected>Select Application Name</option>
-									<option th:each="server : ${allServiceDtls}" th:value="${server.servername}" th:text="${server.servername}"></option>
+									<option th:each="server : ${listAppDtls}" th:value="${server.applicationName}" th:text="${server.applicationName}"></option>
 								</select>
 							</div>
 						</div>

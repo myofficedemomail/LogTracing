@@ -1,7 +1,11 @@
 package com.softtek.controller;
 
+import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.softtek.form.ApplicationDtlsForm;
+import com.softtek.service.AppService;
 
 @Controller
 public class AdminApplicationController {
+	@Autowired
+	private AppService appService;
+
 	@GetMapping("/")
 	public String loginPage(Model model) {
-		// model.addAttribute("searchform", new SearchRequest());
-		// model.addAttribute("list", null);
 		return "login";
 	}
 
@@ -31,19 +37,11 @@ public class AdminApplicationController {
 				return "admin";
 			}
 		}
-		// model.addAttribute("searchform", new SearchRequest());
-		// model.addAttribute("list", null);
-		// List<ServerDtlsDto> allServerDtls = serverService.getAllServerDtls();
-		// model.addAttribute("allServiceDtls", allServerDtls);
+		List<ApplicationDtlsForm> listAppDtls = appService.listApplicationDtlsForm();
+		model.addAttribute("listAppDtls", listAppDtls);
 		return "index";
 	}
 
-	/*
-	 * @PostMapping("/addServer") public String savingServerDtls(@ModelAttribute
-	 * ServerDtlsDto sreverDtlsDto,Model model) { String dtls =
-	 * serverService.addServerDtls(sreverDtlsDto); model.addAttribute("msg",dtls);
-	 * return "admin"; }
-	 */
 	@RequestMapping(value = "applicationDtls", method = RequestMethod.POST)
 	public String application(@ModelAttribute ApplicationDtlsForm applicationDtlsForm, Model model) {
 		model.addAttribute("app", new ApplicationDtlsForm());
@@ -51,8 +49,15 @@ public class AdminApplicationController {
 	}
 
 	@RequestMapping(value = "saveApplicationDtls", method = RequestMethod.POST)
-	public String addApplication(@ModelAttribute("app") ApplicationDtlsForm applicationDtlsForm) {
+	public String addApplication(@ModelAttribute("app") ApplicationDtlsForm applicationDtlsForm, Model model)
+			throws Exception {
 		System.out.println(applicationDtlsForm);
-		return "";
+		boolean flag = appService.saveAppDtls(applicationDtlsForm);
+		if (!flag) {
+			model.addAttribute("err", "Unable To Save Server Details");
+		} else {
+			model.addAttribute("info", "Successfully Added Server Details");
+		}
+		return "admin";
 	}
 }

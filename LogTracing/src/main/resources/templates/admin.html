@@ -47,9 +47,9 @@
 		     }
 	    });
 		$("#logout").click(function(){
-			document.searchform.action="/";
-			document.searchform.method="GET";
-			document.searchform.submit();
+			document.app.action="/";
+			document.app.method="GET";
+			document.app.submit();
 		});
 		$("#add").click(function(){
 			document.app.action="saveApplicationDtls";
@@ -146,6 +146,12 @@
 </script>
 </head>
 <body>
+    <div class="row justify-content-center d-flex text-center">
+       <div class="col-6 text-center mt-4">
+       <span class="text-danger" th:text="${err}"></span>
+       <span class="text-success" th:text="${info}"></span>
+       </div>
+    </div>
 	<form name="app" th:object="${app}">
 		<div class="container-fluid">
 			<div class="p-2 mt-4 border border-primary"
